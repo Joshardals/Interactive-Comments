@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
     width: 100%; 
     background-color: hsl(223, 19%, 93%); 
     font-family: 'Rubik', sans-serif;
+    font-size: 16px; 
   }
 `;
 
