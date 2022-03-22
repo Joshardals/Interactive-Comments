@@ -68,7 +68,7 @@ const Top = tw.div`
     flex w-full justify-between
 `;
 const Body = tw.div`
-    text-sm opacity-60
+    text-sm opacity-70
 `;
 const Profile = tw.div`
     flex items-center space-x-4 
