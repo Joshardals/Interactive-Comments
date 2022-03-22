@@ -4,12 +4,13 @@ import { data } from "../data";
 import Comment from "./Comment";
 
 const Body = () => {
-  const [comments, setComments] = useState(data);
+  const [comments, setComments] = useState(data[1]?.comments);
   console.log(comments);
   return (
     <Wrapper>
       {/* {data.map((res) => {
-        return <h1>Hello World!</h1>;
+        const { id, content, createdAt } = res;
+        return <div key={id}>{id}</div>;
       })} */}
       <Comment />
       <Comment />

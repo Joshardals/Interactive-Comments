@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
+import Reply from "./Reply";
 
 const Comment = () => {
   const [vote, setVote] = useState(0);
+  const [reply, setReply] = useState(false);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -14,34 +16,38 @@ const Comment = () => {
     }
   };
   return (
-    <Wrapper>
-      <Votes>
-        <Add onClick={upVote}>+</Add>
-        <Value>{vote}</Value>
-        <Subtract onClick={downVote}>-</Subtract>
-      </Votes>
-      <Header>
-        <Top>
-          <Profile>
-            <ProfileImg src="/avatars/image-amyrobson.png" />
-            <Username>amyrobson</Username>
-            <Time>1 month ago</Time>
-          </Profile>
-          <ReplyButton>
-            <ReplyIcon src="/icon-reply.svg" />
-            <Reply>Reply</Reply>
-          </ReplyButton>
-        </Top>
-        <Body>
-          Impressive! Though it seems the drag feature could be improved. But
-          overall it looks incredible. You've nailed the design and the
-          responsiveness at various breakpoints works really well.
-        </Body>
-      </Header>
-    </Wrapper>
+    <Container>
+      <Wrapper>
+        <Votes>
+          <Add onClick={upVote}>+</Add>
+          <Value>{vote}</Value>
+          <Subtract onClick={downVote}>-</Subtract>
+        </Votes>
+        <Header>
+          <Top>
+            <Profile>
+              <ProfileImg src="/avatars/image-amyrobson.png" />
+              <Username>amyrobson</Username>
+              <Time>1 month ago</Time>
+            </Profile>
+            <ReplyButton onClick={() => setReply(!reply)}>
+              <ReplyIcon src="/icon-reply.svg" />
+              <ReplyText>Reply</ReplyText>
+            </ReplyButton>
+          </Top>
+          <Body>
+            Impressive! Though it seems the drag feature could be improved. But
+            overall it looks incredible. You've nailed the design and the
+            responsiveness at various breakpoints works really well.
+          </Body>
+        </Header>
+      </Wrapper>
+      {reply ? <Reply /> : null}
+    </Container>
   );
 };
 
+const Container = tw.div``;
 const Wrapper = tw.div`
     bg-white p-[1rem] h-[14rem] md:h-auto rounded-md
     w-auto flex space-x-4 items-start relative
@@ -68,7 +74,7 @@ const Top = tw.div`
     flex w-full justify-between
 `;
 const Body = tw.div`
-    text-sm opacity-70
+    text-sm opacity-60
 `;
 const Profile = tw.div`
     flex items-center space-x-4 
@@ -85,11 +91,13 @@ const Time = tw.div`
 const ReplyButton = tw.button`
     flex items-center space-x-2 text-sm
     md:inline-flex absolute md:relative 
-    right-4 bottom-4 md:bottom-0
+    right-4 bottom-4 md:bottom-0 hover:opacity-50 
+    transition-all ease-in
 `;
 const ReplyIcon = tw.img``;
-const Reply = tw.div`
+const ReplyText = tw.div`
     font-bold text-[#5457b6]
 `;
+[];
 
 export default Comment;
