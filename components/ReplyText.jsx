@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
-import Reply from "./Reply";
-import ReplyText from "./ReplyText";
 
-const Comment = ({ id, content, createdAt, score, user, replies }) => {
+const ReplyText = ({ content, createdAt, score, replyingTo, user }) => {
   const [vote, setVote] = useState(score);
   const [reply, setReply] = useState(false);
   const upVote = () => {
@@ -39,22 +37,28 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
               <ReplyMsg>Reply</ReplyMsg>
             </ReplyButton>
           </Top>
-          <Body>{content}</Body>
+          <Body>
+            <span className="font-bold text-[#5457b6] opacity-100">@{replyingTo} </span>
+            <span className="opacity-60">{content}</span>
+          </Body>
         </Header>
       </Wrapper>
-      {replies.map((res) => {
-        return <ReplyText key={res.id} {...res} />;
-      })}
-      {reply ? <Reply /> : null}
+      <Line></Line>
     </Container>
   );
 };
 
 const Container = tw.div`
+    relative border
+`;
+const Line = tw.div`
+    absolute top-0 left-8 bg-black w-[2px] h-full
+    opacity-10
 `;
 const Wrapper = tw.div`
     bg-white p-[1rem] h-[14rem] md:h-auto rounded-md
-    w-auto flex space-x-4 items-start relative
+    w-auto flex space-x-4 items-start relative mt-4
+    ml-14
 `;
 const Votes = tw.div`
     bg-[#eaecf1] flex md:flex-col
@@ -63,15 +67,13 @@ const Votes = tw.div`
     md:bottom-0 md:w-auto w-[6rem] space-x-5 md:space-x-0
 `;
 const Add = tw.button`
-    text-[#5457b6] opacity-50 hover:opacity-100
-    transition-all ease-in font-bold
+    text-[#5457b6] opacity-50 hover:opacity-100 transition-all ease-in font-bold
 `;
 const Value = tw.div`
-    font-bold text-[#5457b6] text-center
+    font-bold text-[#5457b6] text-center 
 `;
 const Subtract = tw.button`
-    text-[#5457b6] opacity-50 hover:opacity-100
-    transition-all ease-in font-bold
+    text-[#5457b6] opacity-50 hover:opacity-100 transition-all ease-in font-bold
 `;
 const Header = tw.div`
    flex flex-col space-y-2
@@ -80,7 +82,7 @@ const Top = tw.div`
     flex w-full justify-between
 `;
 const Body = tw.div`
-    text-sm opacity-60
+    text-sm
 `;
 const Profile = tw.div`
     flex items-center space-x-4 
@@ -105,4 +107,4 @@ const ReplyMsg = tw.div`
     font-bold text-[#5457b6]
 `;
 
-export default Comment;
+export default ReplyText;

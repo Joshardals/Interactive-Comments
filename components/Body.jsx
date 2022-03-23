@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
-import { data } from "../data";
+import { useRecoilState } from "recoil";
+import { dataItem } from "../atoms/dataAtom";
 import Comment from "./Comment";
+import AddComment from "./AddComment";
 
 const Body = () => {
-  const [comments, setComments] = useState(data[1]?.comments);
+  const [comments, setComments] = useRecoilState(dataItem);
   console.log(comments);
   return (
     <Wrapper>
-      {/* {data.map((res) => {
-        const { id, content, createdAt } = res;
-        return <div key={id}>{id}</div>;
-      })} */}
-      <Comment />
-      <Comment />
+      {comments[1]?.comments.map((res) => {
+        return <Comment key={res.id} {...res} />;
+      })}
+      <AddComment />
     </Wrapper>
   );
 };

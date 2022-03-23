@@ -14,7 +14,7 @@ const Reply = () => {
         value={reply}
         onChange={handleReply}
       />
-      <ReplyButton>Reply</ReplyButton>
+      <ReplyButton disabled={!reply.trim()}>Reply</ReplyButton>
     </Wrapper>
   );
 };
@@ -32,5 +32,6 @@ const TextArea = tw.textarea`
 const ReplyButton = tw.button`
     bg-[#5457b6] w-[5rem] h-[2.3rem] rounded-md
     hover:opacity-50 transition-all ease-in text-white
+    disabled:opacity-50
 `;
 export default Reply;
