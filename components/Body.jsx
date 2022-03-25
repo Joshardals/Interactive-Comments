@@ -7,10 +7,10 @@ import AddComment from "./AddComment";
 
 const Body = () => {
   const [comments, setComments] = useRecoilState(dataItem);
-  console.log(comments);
+    console.log(comments)
   return (
     <Wrapper>
-      {comments[1]?.comments.map((res) => {
+      {comments.map((res) => {
         return <Comment key={res.id} {...res} />;
       })}
       <AddComment />

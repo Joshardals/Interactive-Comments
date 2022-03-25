@@ -7,28 +7,32 @@ import { data } from "../data";
 const AddComment = () => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
-    const [comment, setComment] = useState(comments[1]?.comments); 
-  console.log(comment)
+  const [comment, setComment] = useState(comments[1]?.comments);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
-  const addCmt = () => {
-    setComment({
+  const addCmt = (e) => {
+    e.preventDefault();
+    setComments([
       ...comments,
-      id: Date.now,
-      content: reply,
-      createdAt: "16 seconds ago",
-      score: 0,
-      user: {
-        image: {
-          png: "/avatars/image-juliusomo.png",
-          webp: "/avatars/image-juliusomo.webp",
+      {
+        id: new Date().getTime().toString(),
+        content: reply,
+        createdAt: "16 seconds ago",
+        score: 0,
+        user: {
+          image: {
+            png: "/avatars/image-juliusomo.png",
+            webp: "/avatars/image-juliusomo.webp",
+          },
+          username: "joshardals",
         },
-        username: "joshardals",
+       replies: [], 
       },
-      replies: {},
-    });
+    ]);
+    setReply("");
   };
+  console.log(comment);
   return (
     <Wrapper>
       <ProfileImg src="/avatars/image-amyrobson.png" />
