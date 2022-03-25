@@ -1,10 +1,57 @@
 import React, { useState } from "react";
+import { useRecoilState } from "recoil";
+import { dataItem } from "../atoms/dataAtom";
 import tw from "tailwind-styled-components";
 
 const Reply = () => {
   const [reply, setReply] = useState("");
+  const [comments, setComments] = useRecoilState(dataItem);
+  console.log(comments.map((res) => res.replies));
   const handleReply = (e) => {
     setReply(e.target.value);
+  };
+  const addReply = (e) => {
+    e.preventDefault();
+    comments.map((res) => {
+      if (res.id === res.id) {
+        setComments([
+          ...comments,
+          {
+            replies: [
+              {
+                id: new Date().getTime().toString(),
+                content: reply,
+                createdAt: "16 seconds ago",
+                score: 0,
+                replyingTo: "",
+                user: {
+                  image: {
+                    png: "/avatars/image-juliusomo.png",
+                    webp: "/avatars/image-juliusomo.webp",
+                  },
+                  username: "juliusomo",
+                },
+              },
+            ],
+          },
+        ]);
+        console.log(res.replies);
+      }
+    });
+    // setComments([
+    //   ...comments,
+    //   {
+    //     replies: [
+    //       {
+    //         id: new Date().getTime().toString(),
+    //         content: reply,
+    //         createdAt: "16 seconds ago",
+    //         score: 0,
+    //         replyingTo:
+    //       },
+    //     ],
+    //   },
+    // ]);
   };
   return (
     <Wrapper>
@@ -14,7 +61,9 @@ const Reply = () => {
         value={reply}
         onChange={handleReply}
       />
-      <ReplyButton disabled={!reply.trim()}>Reply</ReplyButton>
+      <ReplyButton disabled={!reply.trim()} onClick={addReply}>
+        Reply
+      </ReplyButton>
     </Wrapper>
   );
 };

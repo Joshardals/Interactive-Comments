@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import { useRecoilState } from "recoil";
 import { dataItem } from "../atoms/dataAtom";
-import { data } from "../data";
 
 const AddComment = () => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
-  const [comment, setComment] = useState(comments[1]?.comments);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
@@ -26,16 +24,16 @@ const AddComment = () => {
             webp: "/avatars/image-juliusomo.webp",
           },
           username: "joshardals",
+          you: "you",
         },
-       replies: [], 
+        replies: [],
       },
     ]);
     setReply("");
   };
-  console.log(comment);
   return (
     <Wrapper>
-      <ProfileImg src="/avatars/image-amyrobson.png" />
+      <ProfileImg src="/avatars/image-juliusomo.png" />
       <TextArea
         placeholder="Reply message"
         value={reply}

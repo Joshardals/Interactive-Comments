@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .inputButton {
+    @apply text-[#5457b6] opacity-50 hover:opacity-100
+        transition-all ease-in font-bold;
+  }
+}

@@ -1,6 +1,6 @@
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { RecoilRoot } from "recoil"; 
-import "tailwindcss/tailwind.css";
+import { RecoilRoot } from "recoil";
+import "../styles/globals.css";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -19,14 +19,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function MyApp({ Component, pageProps }) {
- return (
-   <>
-     <GlobalStyle />
-     <RecoilRoot>
-       <Component {...pageProps} />
-     </RecoilRoot>
-   </>
- );
+  return (
+    <>
+      <GlobalStyle />
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
+    </>
+  );
 }
 
 export default MyApp;

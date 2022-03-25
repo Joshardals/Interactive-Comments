@@ -29,6 +29,7 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
             <Profile>
               <ProfileImg src={`${user?.image.png}`} />
               <Username>{user?.username}</Username>
+              <You>{user?.you}</You>
               <Time>{createdAt}</Time>
             </Profile>
             <ReplyButton
@@ -41,6 +42,20 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
           </Top>
           <Body>{content}</Body>
         </Header>
+        <MobileContent>
+          <MobileVote>
+            <Add onClick={upVote}>+</Add>
+            <Value>{vote}</Value>
+            <Subtract onClick={downVote}>-</Subtract>
+          </MobileVote>
+          <MobileReplyButton
+            className={`${reply && "opacity-50"}`}
+            onClick={() => setReply(!reply)}
+          >
+            <ReplyIcon src="/icon-reply.svg" />
+            <ReplyMsg>Reply</ReplyMsg>
+          </MobileReplyButton>
+        </MobileContent>
       </Wrapper>
       {replies.map((res) => {
         return <ReplyText key={res.id} {...res} />;
@@ -51,30 +66,35 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
 };
 
 const Container = tw.div`
+    border-b-2 border-b-gray-300 md:p-4 
+    w-full
+`;
+const MobileContent = tw.div`
+    md:hidden flex justify-between mt-4 items-center 
+`;
+const MobileVote = tw.div`
+    bg-[#eaecf1] flex justify-center px-2 py-1 h-auto rounded-lg
+    w-[6rem] space-x-5
 `;
 const Wrapper = tw.div`
-    bg-white p-[1rem] h-[14rem] md:h-auto rounded-md
-    w-auto flex space-x-4 items-start relative
+    bg-white p-[0.8rem] md:p-[1rem] h-auto rounded-md
+    w-full md:flex space-x-4 items-start
 `;
 const Votes = tw.div`
-    bg-[#eaecf1] flex md:flex-col
-    justify-center px-2 py-1 h-auto rounded-lg
-    md:inline-flex absolute md:relative bottom-4
-    md:bottom-0 md:w-auto w-[6rem] space-x-5 md:space-x-0
+    bg-[#eaecf1] flex-col justify-center px-2 py-1 h-auto rounded-lg
+    hidden md:inline-flex
 `;
-const Add = tw.button`
-    text-[#5457b6] opacity-50 hover:opacity-100
-    transition-all ease-in font-bold
+const Add = tw.button` 
+    inputButton
 `;
 const Value = tw.div`
     font-bold text-[#5457b6] text-center
 `;
 const Subtract = tw.button`
-    text-[#5457b6] opacity-50 hover:opacity-100
-    transition-all ease-in font-bold
+    inputButton
 `;
 const Header = tw.div`
-   flex flex-col space-y-2
+   flex flex-col space-y-2 w-full
 `;
 const Top = tw.div`
     flex w-full justify-between
@@ -94,15 +114,20 @@ const Username = tw.div`
 const Time = tw.div`
     text-sm opacity-50 font-bold
 `;
+const You = tw.div`
+    bg-[#5457b6] text-white font-bold 
+    text-sm w-[2rem] text-center rounded-sm
+`;
 const ReplyButton = tw.button`
-    flex items-center space-x-2 text-sm
-    md:inline-flex absolute md:relative 
-    right-4 bottom-4 md:bottom-0 hover:opacity-50 
-    transition-all ease-in
+    flex items-center space-x-2 text-sm hover:opacity-50 
+    transition-all ease-in hidden md:inline-flex
 `;
 const ReplyIcon = tw.img``;
 const ReplyMsg = tw.div`
     font-bold text-[#5457b6]
 `;
-
+const MobileReplyButton = tw.button`
+    flex items-center space-x-2 text-sm hover:opacity-50 
+    transition-all ease-in md:hidden
+`;
 export default Comment;

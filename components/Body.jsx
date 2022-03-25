@@ -7,9 +7,8 @@ import AddComment from "./AddComment";
 
 const Body = () => {
   const [comments, setComments] = useRecoilState(dataItem);
-    console.log(comments)
   return (
-    <Wrapper>
+    <Wrapper className="">
       {comments.map((res) => {
         return <Comment key={res.id} {...res} />;
       })}
@@ -19,7 +18,7 @@ const Body = () => {
 };
 
 const Wrapper = tw.div`
-    py-[3rem] space-y-4 flex flex-col items-center
+    py-[3rem] space-y-4 md:space-y-0 flex flex-col items-center
     justify-center px-[1rem] md:px-[10rem] lg:px-[24rem]
 `;
 export default Body;
