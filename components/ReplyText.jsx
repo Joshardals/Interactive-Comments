@@ -28,6 +28,7 @@ const ReplyText = ({ content, createdAt, score, replyingTo, user }) => {
             <Profile>
               <ProfileImg src={`${user?.image.png}`} />
               <Username>{user?.username}</Username>
+              <You>you</You>
               <Time>{createdAt}</Time>
             </Profile>
             <ReplyButton
@@ -61,7 +62,7 @@ const ReplyText = ({ content, createdAt, score, replyingTo, user }) => {
         </MobileContent>
       </Wrapper>
       <Line></Line>
-      {reply ? <Reply /> : null}
+      {/* {reply ? <Reply /> : null} */}
     </Container>
   );
 };
@@ -70,12 +71,12 @@ const Container = tw.div`
     relative border
 `;
 const Line = tw.div`
-    absolute top-0 left-8 bg-gray-300 w-[2px] h-full
+    absolute top-0 left-0 md:left-8 bg-gray-300 w-[2px] h-full
 `;
 const Wrapper = tw.div`
     bg-white p-[0.8rem] md:p-[1rem] h-auto rounded-md
     w-auto md:flex space-x-4 items-start relative mt-4
-    ml-14
+    md:ml-14 ml-5
 `;
 const MobileContent = tw.div`
     md:hidden flex justify-between mt-4 items-center 
@@ -121,6 +122,11 @@ const Username = tw.div`
 `;
 const Time = tw.div`
     text-sm opacity-50 font-bold
+`;
+const You = tw.div`
+    bg-[#5457b6] text-white font-bold 
+    text-sm w-[2rem] text-center rounded-sm
+    block md:hidden
 `;
 const ReplyButton = tw.button`
     flex items-center space-x-2 text-sm hover:opacity-50 

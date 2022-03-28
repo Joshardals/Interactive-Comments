@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
+import { useRecoilValue } from "recoil";
+import { replyItem } from "../atoms/dataAtom";
 import Reply from "./Reply";
 import ReplyText from "./ReplyText";
 
 const Comment = ({ id, content, createdAt, score, user, replies }) => {
   const [vote, setVote] = useState(score);
   const [reply, setReply] = useState(false);
+  const replyContent = useRecoilValue(replyItem);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -16,6 +19,7 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
       setVote(vote - 1);
     }
   };
+
   return (
     <Container>
       <Wrapper>
@@ -57,10 +61,12 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
           </MobileReplyButton>
         </MobileContent>
       </Wrapper>
-      {replies.map((res) => {
-        return <ReplyText key={res.id} {...res} />;
+      {replyContent.map((res) => {
+        if (res.replyingTo === user.username) {
+          return <ReplyText key={res.id} {...res} />;
+        }
       })}
-      {reply ? <Reply /> : null}
+      {reply ? <Reply id={id} user={user} replies={replies} /> : null}
     </Container>
   );
 };
@@ -77,8 +83,8 @@ const MobileVote = tw.div`
     w-[6rem] space-x-5
 `;
 const Wrapper = tw.div`
-    bg-white p-[0.8rem] md:p-[1rem] h-auto rounded-md
-    w-full md:flex space-x-4 items-start
+    bg-white p-5 md:p-[1rem] h-auto rounded-md
+    w-auto md:flex md:space-x-4 items-start
 `;
 const Votes = tw.div`
     bg-[#eaecf1] flex-col justify-center px-2 py-1 h-auto rounded-lg
@@ -103,7 +109,7 @@ const Body = tw.div`
     text-sm opacity-60
 `;
 const Profile = tw.div`
-    flex items-center space-x-4 
+    flex items-center space-x-4
 `;
 const ProfileImg = tw.img`
     object-contain h-8 w-8
@@ -117,6 +123,7 @@ const Time = tw.div`
 const You = tw.div`
     bg-[#5457b6] text-white font-bold 
     text-sm w-[2rem] text-center rounded-sm
+    block md:hidden
 `;
 const ReplyButton = tw.button`
     flex items-center space-x-2 text-sm hover:opacity-50 

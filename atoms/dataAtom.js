@@ -10,3 +10,7 @@ export const userItem = atom({
   key: "userItem",
   default: user,
 });
+export const replyItem = atom({
+  key: "replyItem",
+  default: data.map((res) => {return res}),
+});

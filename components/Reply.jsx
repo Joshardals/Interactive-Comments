@@ -1,61 +1,42 @@
 import React, { useState } from "react";
-import { useRecoilState } from "recoil";
-import { dataItem } from "../atoms/dataAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { dataItem, replyItem } from "../atoms/dataAtom";
 import tw from "tailwind-styled-components";
+import { data } from "../data";
 
-const Reply = () => {
+const Reply = ({ id, user, replies }) => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
-  console.log(comments.map((res) => res.replies));
+  // const [replies, setReplies] = useState(data);
+  const [replyContent, setReplyContent] = useRecoilState(replyItem);
+  const [replys, setReplys] = useState(replies);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
   const addReply = (e) => {
     e.preventDefault();
-    comments.map((res) => {
-      if (res.id === res.id) {
-        setComments([
-          ...comments,
-          {
-            replies: [
-              {
-                id: new Date().getTime().toString(),
-                content: reply,
-                createdAt: "16 seconds ago",
-                score: 0,
-                replyingTo: "",
-                user: {
-                  image: {
-                    png: "/avatars/image-juliusomo.png",
-                    webp: "/avatars/image-juliusomo.webp",
-                  },
-                  username: "juliusomo",
-                },
-              },
-            ],
+    setReplyContent([
+      ...replyContent,
+      {
+        id: new Date().getTime().toString(),
+        content: reply,
+        createdAt: "16 seconds ago",
+        score: 0,
+        replyingTo: user.username,
+        user: {
+          image: {
+            png: "/avatars/image-juliusomo.png",
+            webp: "/avatars/image-juiliusomo.webp",
           },
-        ]);
-        console.log(res.replies);
-      }
-    });
-    // setComments([
-    //   ...comments,
-    //   {
-    //     replies: [
-    //       {
-    //         id: new Date().getTime().toString(),
-    //         content: reply,
-    //         createdAt: "16 seconds ago",
-    //         score: 0,
-    //         replyingTo:
-    //       },
-    //     ],
-    //   },
-    // ]);
+          username: "juliusomo",
+        },
+      },
+    ]);
+    setReply("");
   };
   return (
     <Wrapper>
-      <ProfileImg src="/avatars/image-amyrobson.png" />
+      <ProfileImg src="/avatars/image-juliusomo.png" />
       <TextArea
         placeholder="Reply message"
         value={reply}
@@ -69,7 +50,7 @@ const Reply = () => {
 };
 
 const Wrapper = tw.div`
-    mt-4  bg-white p-[1rem] h-auto rounded-md
+    mt-4  bg-white p-5 md:p-[1rem] h-auto rounded-md
     w-auto flex items-start relative space-x-4
 `;
 const ProfileImg = tw.img`
