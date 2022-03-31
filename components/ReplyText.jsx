@@ -10,7 +10,6 @@ const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
   const [reply, setReply] = useState(false);
   const [replyContent, setReplyContent] = useRecoilState(replyItem);
   const [deleted, setDeleted] = useRecoilState(deleteItem);
-  const [confirmDeleted, setConfirmDeleted] = useRecoilState(confirmDelete);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -41,14 +40,16 @@ const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
               <You>{user?.you}</You>
               <Time>{createdAt}</Time>
             </Profile>
-            <DeleteButton onClick={handleDelete}>
-              <DeleteIcon src="/icon-delete.svg" />
-              <DeleteMsg>Delete</DeleteMsg>
-            </DeleteButton>
-            <EditButton>
-              <EditIcon src="icon-edit.svg" />
-              <EditMsg>Edit</EditMsg>
-            </EditButton>
+            <div className="flex space-x-4">
+              <DeleteButton onClick={handleDelete}>
+                <DeleteIcon src="/icon-delete.svg" />
+                <DeleteMsg>Delete</DeleteMsg>
+              </DeleteButton>
+              <EditButton>
+                <EditIcon src="icon-edit.svg" />
+                <EditMsg>Edit</EditMsg>
+              </EditButton>
+            </div>
           </Top>
           <Body>
             <span className="font-bold text-[#5457b6] opacity-100">
@@ -140,7 +141,7 @@ const Body = tw.div`
     text-sm
 `;
 const Profile = tw.div`
-    flex items-center space-x-4 
+    flex items-center space-x-3 
 `;
 const ProfileImg = tw.img`
     object-contain h-8 w-8

@@ -66,7 +66,7 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
           return <ReplyText key={res.id} id={res.id} {...res} />;
         }
       })}
-      {reply ? <Reply id={id} user={user} replies={replies} /> : null}
+      {reply ? <Reply id={id} user={user} replies={replies} reply={reply} /> : null}
     </Container>
   );
 };

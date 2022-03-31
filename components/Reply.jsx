@@ -38,6 +38,7 @@ const Reply = ({ id, user, replies }) => {
       <TextArea
         placeholder="Reply message"
         value={reply}
+        autoFocus
         onChange={handleReply}
       />
       <ReplyButton disabled={!reply.trim()} onClick={addReply}>

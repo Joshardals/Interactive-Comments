@@ -5,7 +5,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 
 const Delete = ({ id }) => {
   const [replyContent, setReplyContent] = useRecoilState(replyItem);
-  const [confirmDeleted, setConfirmDeleted] = useRecoilState(confirmDelete);
   const [deletedItem, setDeletedItem] = useRecoilState(deleteItem);
   console.log(id);
   const handleDelete = (e) => {
@@ -24,7 +23,9 @@ const Delete = ({ id }) => {
             comment and can't be undone.
           </p>
           <Buttons>
-            <Cancel>No, Cancel</Cancel>
+            <Cancel onClick={() => setDeletedItem(!deletedItem)}>
+              No, Cancel
+            </Cancel>
             <Confirm onClick={handleDelete}>Yes, Delete</Confirm>
           </Buttons>
         </Box>
@@ -42,6 +43,7 @@ const Container = tw.div`
 `;
 const Box = tw.div`
     h-auto w-[20rem] bg-white p-6 rounded-md space-y-4
+    shadow-lg
 `;
 const Buttons = tw.div`
     flex space-x-4
