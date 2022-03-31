@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { dataItem, replyItem } from "../atoms/dataAtom";
 import tw from "tailwind-styled-components";
-import { data } from "../data";
 
 const Reply = ({ id, user, replies }) => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
-  // const [replies, setReplies] = useState(data);
   const [replyContent, setReplyContent] = useRecoilState(replyItem);
-  const [replys, setReplys] = useState(replies);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
@@ -28,7 +25,8 @@ const Reply = ({ id, user, replies }) => {
             png: "/avatars/image-juliusomo.png",
             webp: "/avatars/image-juiliusomo.webp",
           },
-          username: "juliusomo",
+          username: "joshardals",
+          you: "you",
         },
       },
     ]);

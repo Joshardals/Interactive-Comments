@@ -63,7 +63,7 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
       </Wrapper>
       {replyContent.map((res) => {
         if (res.replyingTo === user.username) {
-          return <ReplyText key={res.id} {...res} />;
+          return <ReplyText key={res.id} id={res.id} {...res} />;
         }
       })}
       {reply ? <Reply id={id} user={user} replies={replies} /> : null}
@@ -123,7 +123,6 @@ const Time = tw.div`
 const You = tw.div`
     bg-[#5457b6] text-white font-bold 
     text-sm w-[2rem] text-center rounded-sm
-    block md:hidden
 `;
 const ReplyButton = tw.button`
     flex items-center space-x-2 text-sm hover:opacity-50 

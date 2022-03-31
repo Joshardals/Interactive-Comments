@@ -35,7 +35,7 @@ const AddComment = () => {
     <Wrapper>
       <ProfileImg src="/avatars/image-juliusomo.png" />
       <TextArea
-        placeholder="Send message"
+        placeholder="Add a comment"
         value={reply}
         onChange={handleReply}
       />

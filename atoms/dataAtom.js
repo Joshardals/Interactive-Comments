@@ -12,5 +12,15 @@ export const userItem = atom({
 });
 export const replyItem = atom({
   key: "replyItem",
-  default: data.map((res) => {return res}),
+  default: data.map((res) => {
+    return res.replies;
+  }),
+});
+export const deleteItem = atom({
+  key: "deleteItem",
+  default: false,
+});
+export const confirmDelete = atom({
+  key: "confirmDelete",
+  default: false,
 });

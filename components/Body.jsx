@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
-import { useRecoilState } from "recoil";
-import { dataItem } from "../atoms/dataAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { dataItem, deleteItem } from "../atoms/dataAtom";
 import Comment from "./Comment";
 import AddComment from "./AddComment";
+import Delete from "./Delete";
 
 const Body = () => {
   const [comments, setComments] = useRecoilState(dataItem);
+  const deleted = useRecoilValue(deleteItem);
   return (
-    <Wrapper className="">
+    <Wrapper>
+      {/* {deleted ? <Delete /> : null} */}
       {comments.map((res) => {
         return <Comment key={res.id} {...res} />;
       })}
