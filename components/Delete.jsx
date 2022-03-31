@@ -51,9 +51,11 @@ const Buttons = tw.div`
 const Cancel = tw.button`
     text-capitalize flex-1 bg-gray-500
     tex-white p-2 text-white rounded-md
+    hover:opacity-50 transition-all ease-in
 `;
 const Confirm = tw.button`
     text-capitalize flex-1 bg-[#ed6468]
     tex-white p-2 text-white rounded-md
+    hover:opacity-50 transition-all ease-in
 `;
 export default Delete;
