@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import { useRecoilState } from "recoil";
 import { dataItem } from "../atoms/dataAtom";
+import { db, storage } from "../firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "@firebase/firestore";
 
 const AddComment = () => {
   const [reply, setReply] = useState("");
@@ -9,26 +17,39 @@ const AddComment = () => {
   const handleReply = (e) => {
     setReply(e.target.value);
   };
-  const addCmt = (e) => {
+  const addCmt = async (e) => {
     e.preventDefault();
-    setComments([
-      ...comments,
-      {
-        id: new Date().getTime().toString(),
-        content: reply,
-        createdAt: "16 seconds ago",
-        score: 0,
-        user: {
-          image: {
-            png: "/avatars/image-juliusomo.png",
-            webp: "/avatars/image-juliusomo.webp",
-          },
-          username: "joshardals",
-          you: "you",
-        },
-        replies: [],
+    await addDoc(collection(db, "comments"), {
+      // id: session.user.uid,
+      content: reply,
+      timestamp: serverTimestamp(),
+      score: 0,
+      user: {
+        // username: session.user.name,
+        // userImg: session.user.image,
+        // tag: session.user.tag,
+        you: "you",
       },
-    ]);
+      replies: [],
+    });
+    // setComments([
+    //   ...comments,
+    //   {
+    //     id: new Date().getTime().toString(),
+    //     content: reply,
+    //     createdAt: "16 seconds ago",
+    //     score: 0,
+    //     user: {
+    //       image: {
+    //         png: "/avatars/image-juliusomo.png",
+    //         webp: "/avatars/image-juliusomo.webp",
+    //       },
+    //       username: "joshardals",
+    //       you: "you",
+    //     },
+    //     replies: [],
+    //   },
+    // ]);
     setReply("");
   };
   return (
