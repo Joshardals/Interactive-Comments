@@ -14,11 +14,13 @@ import {
 const AddComment = () => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
+  const [loading, setLoading] = useState(false);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
   const addCmt = async (e) => {
     e.preventDefault();
+    setLoading(true);
     await addDoc(collection(db, "comments"), {
       // id: session.user.uid,
       content: reply,
@@ -51,6 +53,7 @@ const AddComment = () => {
     //   },
     // ]);
     setReply("");
+    setLoading(false);
   };
   return (
     <Wrapper>
@@ -60,7 +63,11 @@ const AddComment = () => {
         value={reply}
         onChange={handleReply}
       />
-      <ReplyButton onClick={addCmt} disabled={!reply.trim()}>
+      <ReplyButton
+        className={`${loading ? "opacity-50" : null}`}
+        onClick={addCmt}
+        disabled={!reply.trim()}
+      >
         Send
       </ReplyButton>
     </Wrapper>
