@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { RecoilRoot } from "recoil";
 import "../styles/globals.css";
@@ -18,13 +19,15 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <GlobalStyle />
-      <RecoilRoot>
-        <Component {...pageProps} />
-      </RecoilRoot>
+      <SessionProvider session={session}>
+        <RecoilRoot>
+          <Component {...pageProps} />
+        </RecoilRoot>
+      </SessionProvider>
     </>
   );
 }

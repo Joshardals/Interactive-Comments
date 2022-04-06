@@ -15,3 +15,11 @@ export default function Home() {
 }
 
 const Wrapper = tw.div``;
+
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      session: await getSession(ctx),
+    },
+  };
+}
