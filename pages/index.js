@@ -14,6 +14,7 @@ export default function Home() {
       router.push("/login");
     }
   }, []);
+  console.log(session);
   return (
     <Wrapper>
       <Head>
