@@ -24,14 +24,14 @@ const AddComment = () => {
     e.preventDefault();
     setLoading(true);
     await addDoc(collection(db, "comments"), {
-      id: session.user.uuid,
+      id: session?.user?.uuid,
       content: reply,
       timestamp: serverTimestamp(),
       score: 0,
       user: {
-        username: session.user.name,
-        userImg: session.user.image,
-        tag: session.user.tag,
+        username: session?.user?.name,
+        userImg: session?.user?.image,
+        tag: session?.user?.tag,
         you: "you",
       },
       replies: [],
@@ -41,7 +41,7 @@ const AddComment = () => {
   };
   return (
     <Wrapper>
-      <ProfileImg src={session.user.image} />
+      <ProfileImg src={session?.user?.image} />
       <TextArea
         placeholder="Add a comment"
         value={reply}

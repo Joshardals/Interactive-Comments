@@ -1,13 +1,14 @@
 import React from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import tw from "tailwind-styled-components";
 
 const Profile = () => {
+  const { data: session } = useSession();
   return (
     <Wrapper>
-      <Container>
-        <ProfileImg src="/avatars/image-juliusomo.png" />
-        <Username>Welcome, Joshua</Username>
+      <Container onClick={() => signOut()}>
+        <ProfileImg src={session?.user?.image} />
+        <Username>{session?.user?.name}</Username>
       </Container>
     </Wrapper>
   );
@@ -16,10 +17,12 @@ const Wrapper = tw.div`
     flex items-center justify-end m-4
 `;
 const Container = tw.button`
-    bg-gray-200 flex items-center rounded-full
-    space-x-4 p-2
+    flex items-center rounded-full
+    space-x-4 p-1 md:p-2 hover:bg-gray-300 transition-all ease-in
 `;
-const Username = tw.div``;
+const Username = tw.div`
+    md:inline-flex hidden
+`;
 const ProfileImg = tw.img`
     object-contain h-8 w-8 rounded-full
 `;

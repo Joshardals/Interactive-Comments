@@ -22,6 +22,6 @@ const Body = () => {
 
 const Wrapper = tw.div`
     space-y-4 md:space-y-0 flex flex-col items-center
-    justify-center px-[1rem] md:px-[10rem] lg:px-[24rem]
+    justify-center px-[1rem] md:px-[10rem] lg:px-[20rem]
 `;
 export default Body;
