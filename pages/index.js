@@ -4,6 +4,7 @@ import { getProviders, getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import tw from "tailwind-styled-components";
 import Body from "../components/Body";
+import Profile from "../components/Profile";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -21,6 +22,7 @@ export default function Home() {
         <title>Interactive Comments</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Profile />
       <Body />
     </Wrapper>
   );

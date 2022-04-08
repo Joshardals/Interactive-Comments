@@ -21,7 +21,7 @@ const Body = () => {
 };
 
 const Wrapper = tw.div`
-    py-[3rem] space-y-4 md:space-y-0 flex flex-col items-center
+    space-y-4 md:space-y-0 flex flex-col items-center
     justify-center px-[1rem] md:px-[10rem] lg:px-[24rem]
 `;
 export default Body;

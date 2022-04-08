@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { dataItem, replyItem } from "../atoms/dataAtom";
 import tw from "tailwind-styled-components";
 
 const Reply = ({ id, user, replies }) => {
+  const { data: session } = useSession();
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
   const [replyContent, setReplyContent] = useRecoilState(replyItem);
@@ -34,7 +36,7 @@ const Reply = ({ id, user, replies }) => {
   };
   return (
     <Wrapper>
-      <ProfileImg src="/avatars/image-juliusomo.png" />
+      <ProfileImg src={session.user.image} />
       <TextArea
         placeholder="Reply message"
         value={reply}
@@ -53,7 +55,7 @@ const Wrapper = tw.div`
     w-auto flex items-start relative space-x-4
 `;
 const ProfileImg = tw.img`
-    object-contain h-8 w-8
+    object-contain h-8 w-8 rounded-full
 `;
 const TextArea = tw.textarea`
     text-dark text-sm flex-1 p-4

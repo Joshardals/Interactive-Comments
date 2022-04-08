@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
 import { useRecoilState } from "recoil";
 import { dataItem } from "../atoms/dataAtom";
@@ -12,6 +13,7 @@ import {
 } from "@firebase/firestore";
 
 const AddComment = () => {
+  const { data: session } = useSession();
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
   const [loading, setLoading] = useState(false);
@@ -22,42 +24,24 @@ const AddComment = () => {
     e.preventDefault();
     setLoading(true);
     await addDoc(collection(db, "comments"), {
-      // id: session.user.uid,
+      id: session.user.uuid,
       content: reply,
       timestamp: serverTimestamp(),
       score: 0,
       user: {
-        // username: session.user.name,
-        // userImg: session.user.image,
-        // tag: session.user.tag,
+        username: session.user.name,
+        userImg: session.user.image,
+        tag: session.user.tag,
         you: "you",
       },
       replies: [],
     });
-    // setComments([
-    //   ...comments,
-    //   {
-    //     id: new Date().getTime().toString(),
-    //     content: reply,
-    //     createdAt: "16 seconds ago",
-    //     score: 0,
-    //     user: {
-    //       image: {
-    //         png: "/avatars/image-juliusomo.png",
-    //         webp: "/avatars/image-juliusomo.webp",
-    //       },
-    //       username: "joshardals",
-    //       you: "you",
-    //     },
-    //     replies: [],
-    //   },
-    // ]);
     setReply("");
     setLoading(false);
   };
   return (
     <Wrapper>
-      <ProfileImg src="/avatars/image-juliusomo.png" />
+      <ProfileImg src={session.user.image} />
       <TextArea
         placeholder="Add a comment"
         value={reply}
@@ -79,7 +63,7 @@ const Wrapper = tw.div`
     w-full flex items-start relative space-x-4
 `;
 const ProfileImg = tw.img`
-    object-contain h-8 w-8
+    object-contain h-8 w-8 rounded-full
 `;
 const TextArea = tw.textarea`
     text-dark text-sm flex-1 p-4
