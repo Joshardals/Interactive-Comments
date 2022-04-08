@@ -7,7 +7,7 @@ const login = ({ providers }) => {
   return (
     <Wrapper>
       <Head>
-        <title>Login</title>
+        <title>Login - Interactive Comments</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {Object.values(providers).map((provider) => {
