@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
 import { useRecoilValue } from "recoil";
 import { replyItem } from "../atoms/dataAtom";
 import Reply from "./Reply";
 import ReplyText from "./ReplyText";
 
-const Comment = ({ id, content, createdAt, score, user, replies }) => {
-  const [vote, setVote] = useState(score);
+const Comment = ({ id, comment }) => {
+  const { data: session } = useSession();
+  const [vote, setVote] = useState(comment?.score);
   const [reply, setReply] = useState(false);
   const replyContent = useRecoilValue(replyItem);
+  console.log(comment); 
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -31,10 +34,12 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
         <Header>
           <Top>
             <Profile>
-              <ProfileImg src={`${user?.image.png}`} />
-              <Username>{user?.username}</Username>
-              <You>{user?.you}</You>
-              <Time>{createdAt}</Time>
+              <ProfileImg src={`${comment?.user?.userImg}`} />
+              <Username>{comment?.user?.username}</Username>
+              {session?.user?.name === comment?.user?.username ? (
+                <You>{comment?.user?.you}</You>
+              ) : null}
+              <Time>{comment?.timestamp?.seconds}</Time>
             </Profile>
             <ReplyButton
               className={`${reply && "opacity-50"}`}
@@ -44,7 +49,7 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
               <ReplyMsg>Reply</ReplyMsg>
             </ReplyButton>
           </Top>
-          <Body>{content}</Body>
+          <Body>{comment?.content}</Body>
         </Header>
         <MobileContent>
           <MobileVote>
@@ -61,12 +66,12 @@ const Comment = ({ id, content, createdAt, score, user, replies }) => {
           </MobileReplyButton>
         </MobileContent>
       </Wrapper>
-      {replyContent.map((res) => {
+      {/* {replyContent.map((res) => {
         if (res.replyingTo === user.username) {
           return <ReplyText key={res.id} id={res.id} {...res} />;
         }
-      })}
-      {reply ? <Reply id={id} user={user} replies={replies} reply={reply} /> : null}
+      })} */}
+      {reply ? <Reply id={id} /> : null}
     </Container>
   );
 };
@@ -112,7 +117,7 @@ const Profile = tw.div`
     flex items-center space-x-4
 `;
 const ProfileImg = tw.img`
-    object-contain h-8 w-8
+    object-contain h-8 w-8 rounded-full
 `;
 const Username = tw.div`
     font-bold text-sm

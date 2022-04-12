@@ -24,7 +24,7 @@ const AddComment = () => {
     e.preventDefault();
     setLoading(true);
     await addDoc(collection(db, "comments"), {
-      id: session?.user?.uuid,
+      id: session?.user?.uid,
       content: reply,
       timestamp: serverTimestamp(),
       score: 0,

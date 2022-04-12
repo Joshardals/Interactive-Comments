@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { dataItem, replyItem } from "../atoms/dataAtom";
 import tw from "tailwind-styled-components";
 
-const Reply = ({ id, user, replies }) => {
+const Reply = ({ id }) => {
   const { data: session } = useSession();
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
@@ -14,29 +14,29 @@ const Reply = ({ id, user, replies }) => {
   };
   const addReply = (e) => {
     e.preventDefault();
-    setReplyContent([
-      ...replyContent,
-      {
-        id: new Date().getTime().toString(),
-        content: reply,
-        createdAt: "16 seconds ago",
-        score: 0,
-        replyingTo: user.username,
-        user: {
-          image: {
-            png: "/avatars/image-juliusomo.png",
-            webp: "/avatars/image-juiliusomo.webp",
-          },
-          username: "joshardals",
-          you: "you",
-        },
-      },
-    ]);
+    // setReplyContent([
+    //   ...replyContent,
+    //   {
+    //     id: new Date().getTime().toString(),
+    //     content: reply,
+    //     createdAt: "16 seconds ago",
+    //     score: 0,
+    //     replyingTo: user.username,
+    //     user: {
+    //       image: {
+    //         png: "/avatars/image-juliusomo.png",
+    //         webp: "/avatars/image-juiliusomo.webp",
+    //       },
+    //       username: "joshardals",
+    //       you: "you",
+    //     },
+    //   },
+    // ]);
     setReply("");
   };
   return (
     <Wrapper>
-      <ProfileImg src={session.user.image} />
+      <ProfileImg src={session?.user?.image} />
       <TextArea
         placeholder="Reply message"
         value={reply}

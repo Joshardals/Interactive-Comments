@@ -35,7 +35,7 @@ const Delete = ({ id }) => {
 };
 const Wrapper = tw.div`
     fixed top-0 left-0 h-[100vh] w-full bg-black 
-    z-10 bg-opacity-40
+    z-10 bg-opacity-50
 `;
 const Container = tw.div`
     flex items-center justify-center

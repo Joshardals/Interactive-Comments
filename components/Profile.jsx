@@ -17,7 +17,7 @@ const Wrapper = tw.div`
     flex items-center justify-end m-4
 `;
 const Container = tw.button`
-    flex items-center rounded-full
+    flex items-center rounded-full bg-gray-200
     space-x-4 p-1 md:p-2 hover:bg-gray-300 transition-all ease-in
 `;
 const Username = tw.div`
