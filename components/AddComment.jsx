@@ -17,6 +17,7 @@ const AddComment = () => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
   const [loading, setLoading] = useState(false);
+  const [liked, setLiked] = useState(false); 
   const handleReply = (e) => {
     setReply(e.target.value);
   };

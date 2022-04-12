@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import tw from "tailwind-styled-components";
 import { useRecoilValue } from "recoil";
 import { replyItem } from "../atoms/dataAtom";
 import Reply from "./Reply";
 import ReplyText from "./ReplyText";
+import { deleteDoc, doc } from "@firebase/firestore";
+import { db } from "../firebase";
 
 const Comment = ({ id, comment }) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const [vote, setVote] = useState(comment?.score);
   const [reply, setReply] = useState(false);
   const replyContent = useRecoilValue(replyItem);
-  console.log(comment); 
+  console.log(comment);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -41,13 +45,28 @@ const Comment = ({ id, comment }) => {
               ) : null}
               <Time>{comment?.timestamp?.seconds}</Time>
             </Profile>
-            <ReplyButton
-              className={`${reply && "opacity-50"}`}
-              onClick={() => setReply(!reply)}
-            >
-              <ReplyIcon src="/icon-reply.svg" />
-              <ReplyMsg>Reply</ReplyMsg>
-            </ReplyButton>
+            <div className="flex space-x-4">
+              <ReplyButton
+                className={`${reply && "opacity-50"}`}
+                onClick={() => setReply(!reply)}
+              >
+                <ReplyIcon src="/icon-reply.svg" />
+                <ReplyMsg>Reply</ReplyMsg>
+              </ReplyButton>
+
+              {session?.user?.uid === comment?.id ? (
+                <DeleteButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteDoc(doc(db, "comments", id));
+                    router.push("/");
+                  }}
+                >
+                  <DeleteIcon src="/icon-delete.svg" />
+                  <DeleteMsg>Delete</DeleteMsg>
+                </DeleteButton>
+              ) : null}
+            </div>
           </Top>
           <Body>{comment?.content}</Body>
         </Header>
@@ -57,13 +76,27 @@ const Comment = ({ id, comment }) => {
             <Value>{vote}</Value>
             <Subtract onClick={downVote}>-</Subtract>
           </MobileVote>
-          <MobileReplyButton
-            className={`${reply && "opacity-50"}`}
-            onClick={() => setReply(!reply)}
-          >
-            <ReplyIcon src="/icon-reply.svg" />
-            <ReplyMsg>Reply</ReplyMsg>
-          </MobileReplyButton>
+          <div className="flex space-x-4">
+            <MobileReplyButton
+              className={`${reply && "opacity-50"}`}
+              onClick={() => setReply(!reply)}
+            >
+              <ReplyIcon src="/icon-reply.svg" />
+              <ReplyMsg>Reply</ReplyMsg>
+            </MobileReplyButton>
+            {session?.user?.uid === comment?.id ? (
+              <MobileDeleteButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteDoc(doc(db, "comments", id));
+                  router.push("/");
+                }}
+              >
+                <DeleteIcon src="/icon-delete.svg" />
+                <DeleteMsg>Delete</DeleteMsg>
+              </MobileDeleteButton>
+            ) : null}
+          </div>
         </MobileContent>
       </Wrapper>
       {/* {replyContent.map((res) => {
@@ -135,9 +168,22 @@ const ReplyButton = tw.button`
 `;
 const ReplyIcon = tw.img``;
 const ReplyMsg = tw.div`
-    font-bold text-[#5457b6]
+    font-bold text-[#5457b6] inline-flex md:hidden lg:inline-flex
 `;
+const DeleteButton = tw.button`
+  flex items-center space-x-2 text-sm hover:opacity-50 
+  transition-all ease-in hidden md:inline-flex
+`;
+const DeleteIcon = tw.img``;
+const DeleteMsg = tw.div`
+  font-bold text-[#ed6468] inline-flex md:hidden lg:inline-flex
+`;
+
 const MobileReplyButton = tw.button`
+    flex items-center space-x-2 text-sm hover:opacity-50 
+    transition-all ease-in md:hidden
+`;
+const MobileDeleteButton = tw.button`
     flex items-center space-x-2 text-sm hover:opacity-50 
     transition-all ease-in md:hidden
 `;

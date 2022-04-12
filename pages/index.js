@@ -28,7 +28,9 @@ export default function Home() {
   );
 }
 
-const Wrapper = tw.div``;
+const Wrapper = tw.div`
+  py-6
+`;
 
 export async function getServerSideProps(ctx) {
   const providers = await getProviders();
