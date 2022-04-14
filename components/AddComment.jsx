@@ -17,7 +17,7 @@ const AddComment = () => {
   const [reply, setReply] = useState("");
   const [comments, setComments] = useRecoilState(dataItem);
   const [loading, setLoading] = useState(false);
-  const [liked, setLiked] = useState(false); 
+  const [liked, setLiked] = useState(false);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
@@ -49,11 +49,11 @@ const AddComment = () => {
         onChange={handleReply}
       />
       <ReplyButton
-        className={`${loading ? "opacity-50" : null}`}
+        // className={`${loading ? "opacity-50" : null}`}
         onClick={addCmt}
-        disabled={!reply.trim()}
+        disabled={!reply.trim() || loading}
       >
-        Send
+        {loading ? "Sending" : "Send"}
       </ReplyButton>
     </Wrapper>
   );

@@ -43,7 +43,7 @@ const Comment = ({ id, comment }) => {
               {session?.user?.name === comment?.user?.username ? (
                 <You>{comment?.user?.you}</You>
               ) : null}
-              <Time>{comment?.timestamp?.seconds}</Time>
+              <Time>{comment?.timestamp?.toDate()}</Time>
             </Profile>
             <div className="flex space-x-4">
               <ReplyButton
