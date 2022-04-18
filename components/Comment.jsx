@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import tw from "tailwind-styled-components";
@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import { replyItem } from "../atoms/dataAtom";
 import Reply from "./Reply";
 import ReplyText from "./ReplyText";
+import { onSnapshot, collection } from "@firebase/firestore";
 import { deleteDoc, doc } from "@firebase/firestore";
 import { db } from "../firebase";
 
@@ -14,8 +15,9 @@ const Comment = ({ id, comment }) => {
   const router = useRouter();
   const [vote, setVote] = useState(comment?.score);
   const [reply, setReply] = useState(false);
+  const [votes, setVotes] = useState([]);
   const replyContent = useRecoilValue(replyItem);
-  console.log(comment);
+  // console.log(comment);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -26,7 +28,12 @@ const Comment = ({ id, comment }) => {
       setVote(vote - 1);
     }
   };
-
+  useEffect(() => {
+    onSnapshot(collection(db, "comments", id, "score"), (snapshot) => {
+      // setVotes(snapshot.docs)
+      console.log(snapshot.docs);
+    });
+  }, [db, id]);
   return (
     <Container>
       <Wrapper>
@@ -43,7 +50,7 @@ const Comment = ({ id, comment }) => {
               {session?.user?.name === comment?.user?.username ? (
                 <You>{comment?.user?.you}</You>
               ) : null}
-              <Time>{comment?.timestamp?.toDate()}</Time>
+              <Time>{comment?.timestamp?.seconds}</Time>
             </Profile>
             <div className="flex space-x-4">
               <ReplyButton

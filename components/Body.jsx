@@ -19,7 +19,6 @@ const Body = () => {
       }
     );
   }, [db]);
-  console.log(comments);
 
   return (
     <Wrapper>
