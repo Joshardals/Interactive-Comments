@@ -1,38 +1,32 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { dataItem, replyItem } from "../atoms/dataAtom";
 import tw from "tailwind-styled-components";
+import { db } from "../firebase";
+import { addDoc, collection, serverTimestamp } from "@firebase/firestore";
 
 const Reply = ({ id }) => {
   const { data: session } = useSession();
   const [reply, setReply] = useState("");
-  const [comments, setComments] = useRecoilState(dataItem);
-  const [replyContent, setReplyContent] = useRecoilState(replyItem);
+  const [loading, setLoading] = useState(false);
+
   const handleReply = (e) => {
     setReply(e.target.value);
   };
-  const addReply = (e) => {
+  const addReply = async (e) => {
     e.preventDefault();
-    // setReplyContent([
-    //   ...replyContent,
-    //   {
-    //     id: new Date().getTime().toString(),
-    //     content: reply,
-    //     createdAt: "16 seconds ago",
-    //     score: 0,
-    //     replyingTo: user.username,
-    //     user: {
-    //       image: {
-    //         png: "/avatars/image-juliusomo.png",
-    //         webp: "/avatars/image-juiliusomo.webp",
-    //       },
-    //       username: "joshardals",
-    //       you: "you",
-    //     },
-    //   },
-    // ]);
+    setLoading(true);
+    await addDoc(collection(db, "comments", id, "replies"), {
+      id: session?.user?.uid,
+      content: reply,
+      timestamp: serverTimestamp(),
+      score: 0,
+      username: session?.user?.name,
+      userImg: session?.user?.image,
+      tag: session?.user?.tag,
+      you: "you",
+    });
     setReply("");
+    setLoading(false);
   };
   return (
     <Wrapper>
@@ -43,8 +37,8 @@ const Reply = ({ id }) => {
         autoFocus
         onChange={handleReply}
       />
-      <ReplyButton disabled={!reply.trim()} onClick={addReply}>
-        Reply
+      <ReplyButton disabled={!reply.trim() || loading} onClick={addReply}>
+        {loading ? "Replying" : "Reply"}
       </ReplyButton>
     </Wrapper>
   );

@@ -3,13 +3,11 @@ import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
 import { useRecoilState } from "recoil";
 import { dataItem } from "../atoms/dataAtom";
-import { db, storage } from "../firebase";
+import { db } from "../firebase";
 import {
   addDoc,
   collection,
-  doc,
   serverTimestamp,
-  updateDoc,
 } from "@firebase/firestore";
 
 const AddComment = () => {
@@ -35,7 +33,6 @@ const AddComment = () => {
         tag: session?.user?.tag,
         you: "you",
       },
-      replies: [],
     });
     setReply("");
     setLoading(false);
@@ -49,7 +46,6 @@ const AddComment = () => {
         onChange={handleReply}
       />
       <ReplyButton
-        // className={`${loading ? "opacity-50" : null}`}
         onClick={addCmt}
         disabled={!reply.trim() || loading}
       >

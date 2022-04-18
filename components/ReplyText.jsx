@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
 import Reply from "./Reply";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { replyItem, deleteItem, confirmDelete } from "../atoms/dataAtom";
 import Delete from "./Delete";
+import {
+  onSnapshot,
+  collection,
+  query,
+  orderBy,
+  where,
+  getDoc,
+  deleteDoc,
+  doc,
+} from "@firebase/firestore";
+import { db } from "../firebase";
 
-const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
-  const [vote, setVote] = useState(score);
+const ReplyText = ({ id, replyId, replys, replyingTo }) => {
+  const { data: session } = useSession();
+  const [vote, setVote] = useState(0);
   const [reply, setReply] = useState(false);
   const [replyContent, setReplyContent] = useRecoilState(replyItem);
   const [deleted, setDeleted] = useRecoilState(deleteItem);
+  console.log("ReplyId", "==>", replyId);
+  console.log("CommentId", "==>", id);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -21,8 +36,8 @@ const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
     }
   };
   const handleDelete = (e) => {
-    e.preventDefault();
-    setDeleted(!deleted);
+    e.preventDefault(); e.stopPropagation();
+    deleteDoc(doc(db, "comments", id, "replies", replyId));
   };
   return (
     <Container>
@@ -35,13 +50,17 @@ const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
         <Header>
           <Top>
             <Profile>
-              <ProfileImg src={`${user?.image.png}`} />
-              <Username>{user?.username}</Username>
-              <You>{user?.you}</You>
-              <Time>{createdAt}</Time>
+              <ProfileImg src={`${replys?.userImg}`} />
+              <Username>{replys?.username}</Username>
+              {session?.user?.name === replys?.username ? (
+                <You>{replys?.you}</You>
+              ) : null}
+              <Time>{replys?.timestamp?.seconds}</Time>
             </Profile>
             <div className="flex space-x-4">
-              <DeleteButton onClick={handleDelete}>
+              <DeleteButton
+                onClick={handleDelete}
+              >
                 <DeleteIcon src="/icon-delete.svg" />
                 <DeleteMsg>Delete</DeleteMsg>
               </DeleteButton>
@@ -55,7 +74,7 @@ const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
             <span className="font-bold text-[#5457b6] opacity-100">
               @{replyingTo}{" "}
             </span>
-            <span className="opacity-60">{content}</span>
+            <span className="opacity-60">{replys?.content}</span>
           </Body>
         </Header>
         <MobileContent>
@@ -77,12 +96,6 @@ const ReplyText = ({ id, content, createdAt, score, replyingTo, user }) => {
         </MobileContent>
       </Wrapper>
       <Line></Line>
-      {/* {replyContent.map((res) => {
-        if (res.replyingTo === user.username) {
-          // return <AddReply key={res.id} {...res} />;
-          console.log(res.replies);
-        }
-      })} */}
       {deleted ? <Delete id={id} /> : null}
     </Container>
   );
@@ -144,7 +157,7 @@ const Profile = tw.div`
     flex items-center space-x-3 
 `;
 const ProfileImg = tw.img`
-    object-contain h-8 w-8
+    object-contain h-8 w-8 rounded-full
 `;
 const Username = tw.div`
     font-bold text-sm

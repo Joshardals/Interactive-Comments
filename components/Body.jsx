@@ -8,7 +8,6 @@ import Comment from "./Comment";
 import AddComment from "./AddComment";
 
 const Body = () => {
-  const [comments1, setComments1] = useRecoilState(dataItem);
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -22,10 +21,7 @@ const Body = () => {
 
   return (
     <Wrapper>
-      {/* {comments1.map((res) => {
-        return <Comment key={res.id} {...res} />;
-      })} */}
-      {comments.map((comment) => {
+      {comments?.map((comment) => {
         return (
           <Comment key={comment.id} id={comment.id} comment={comment.data()} />
         );

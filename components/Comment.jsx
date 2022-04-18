@@ -6,8 +6,16 @@ import { useRecoilValue } from "recoil";
 import { replyItem } from "../atoms/dataAtom";
 import Reply from "./Reply";
 import ReplyText from "./ReplyText";
-import { onSnapshot, collection } from "@firebase/firestore";
-import { deleteDoc, doc } from "@firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  query,
+  orderBy,
+  where,
+  getDoc,
+  deleteDoc,
+  doc,
+} from "@firebase/firestore";
 import { db } from "../firebase";
 
 const Comment = ({ id, comment }) => {
@@ -16,8 +24,8 @@ const Comment = ({ id, comment }) => {
   const [vote, setVote] = useState(comment?.score);
   const [reply, setReply] = useState(false);
   const [votes, setVotes] = useState([]);
-  const replyContent = useRecoilValue(replyItem);
-  // console.log(comment);
+  const [replies, setReplies] = useState(false);
+  const [replyContent, setReplyContent] = useState([]);
   const upVote = () => {
     if (vote >= 0) {
       setVote(vote + 1);
@@ -28,11 +36,26 @@ const Comment = ({ id, comment }) => {
       setVote(vote - 1);
     }
   };
+
   useEffect(() => {
-    onSnapshot(collection(db, "comments", id, "score"), (snapshot) => {
-      // setVotes(snapshot.docs)
-      console.log(snapshot.docs);
-    });
+    // const q = query(collection(db, "comments"), where("score", ">=", 0));
+    // onSnapshot(q, (snapshot) => {
+    //   snapshot.forEach((doc) => {
+    //     console.log(doc.data().scores);
+    //   });
+    // });
+  }, [db, id]);
+
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, "comments", id, "replies"),
+        orderBy("timestamp", "desc")
+      ),
+      (snapshot) => {
+        setReplyContent(snapshot.docs);
+      }
+    );
   }, [db, id]);
   return (
     <Container>
@@ -106,11 +129,17 @@ const Comment = ({ id, comment }) => {
           </div>
         </MobileContent>
       </Wrapper>
-      {/* {replyContent.map((res) => {
-        if (res.replyingTo === user.username) {
-          return <ReplyText key={res.id} id={res.id} {...res} />;
-        }
-      })} */}
+      {replyContent.map((res) => {
+        return (
+          <ReplyText
+            key={res.id}
+            id={id}
+            replyId={res.id}
+            replys={res.data()}
+            replyingTo={comment?.user?.username}
+          />
+        );
+      })}
       {reply ? <Reply id={id} /> : null}
     </Container>
   );
