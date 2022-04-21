@@ -13,11 +13,6 @@ const login = ({ providers }) => {
       {Object.values(providers).map((provider) => {
         return (
           <div key={provider.name}>
-            {/* <LoginButton
-              onClick={() => signIn(provider.id, { callbackUrl: "/" })}
-            >
-              Sign in with {provider.name}
-            </LoginButton> */}
             <a
               onClick={() => signIn(provider.id, { callbackUrl: "/" })}
               class="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 border-[#5457b6] rounded-full shadow-md group"

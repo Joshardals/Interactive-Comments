@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
-import { useRecoilState } from "recoil";
-import { dataItem } from "../atoms/dataAtom";
 import { db } from "../firebase";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "@firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "@firebase/firestore";
 
 const AddComment = () => {
   const { data: session } = useSession();
   const [reply, setReply] = useState("");
-  const [comments, setComments] = useRecoilState(dataItem);
   const [loading, setLoading] = useState(false);
-  const [liked, setLiked] = useState(false);
   const handleReply = (e) => {
     setReply(e.target.value);
   };
@@ -26,7 +18,6 @@ const AddComment = () => {
       id: session?.user?.uid,
       content: reply,
       timestamp: serverTimestamp(),
-      score: 0,
       user: {
         username: session?.user?.name,
         userImg: session?.user?.image,
@@ -45,10 +36,7 @@ const AddComment = () => {
         value={reply}
         onChange={handleReply}
       />
-      <ReplyButton
-        onClick={addCmt}
-        disabled={!reply.trim() || loading}
-      >
+      <ReplyButton onClick={addCmt} disabled={!reply.trim() || loading}>
         {loading ? "Sending" : "Send"}
       </ReplyButton>
     </Wrapper>

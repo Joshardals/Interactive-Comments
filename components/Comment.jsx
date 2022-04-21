@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import Moment from "react-moment";
+import moment from "moment";
 import tw from "tailwind-styled-components";
-import { useRecoilValue } from "recoil";
-import { replyItem } from "../atoms/dataAtom";
 import Reply from "./Reply";
 import ReplyText from "./ReplyText";
 import {
@@ -11,8 +10,7 @@ import {
   collection,
   query,
   orderBy,
-  where,
-  getDoc,
+  setDoc,
   deleteDoc,
   doc,
 } from "@firebase/firestore";
@@ -20,30 +18,23 @@ import { db } from "../firebase";
 
 const Comment = ({ id, comment }) => {
   const { data: session } = useSession();
-  const router = useRouter();
-  const [vote, setVote] = useState(comment?.score);
   const [reply, setReply] = useState(false);
   const [votes, setVotes] = useState([]);
-  const [replies, setReplies] = useState(false);
   const [replyContent, setReplyContent] = useState([]);
-  const upVote = () => {
-    if (vote >= 0) {
-      setVote(vote + 1);
-    }
+
+  const upVote = async () => {
+    await setDoc(doc(db, "comments", id, "score", session?.user?.uid), {
+      username: session?.user?.name,
+    });
   };
-  const downVote = () => {
-    if (vote > 0) {
-      setVote(vote - 1);
-    }
+  const downVote = async () => {
+    await deleteDoc(doc(db, "comments", id, "score", session?.user?.uid));
   };
 
   useEffect(() => {
-    // const q = query(collection(db, "comments"), where("score", ">=", 0));
-    // onSnapshot(q, (snapshot) => {
-    //   snapshot.forEach((doc) => {
-    //     console.log(doc.data().scores);
-    //   });
-    // });
+    onSnapshot(collection(db, "comments", id, "score"), (snapshot) => {
+      setVotes(snapshot.docs);
+    });
   }, [db, id]);
 
   useEffect(() => {
@@ -62,7 +53,7 @@ const Comment = ({ id, comment }) => {
       <Wrapper>
         <Votes>
           <Add onClick={upVote}>+</Add>
-          <Value>{vote}</Value>
+          <Value>{votes.length}</Value>
           <Subtract onClick={downVote}>-</Subtract>
         </Votes>
         <Header>
@@ -73,7 +64,12 @@ const Comment = ({ id, comment }) => {
               {session?.user?.name === comment?.user?.username ? (
                 <You>{comment?.user?.you}</You>
               ) : null}
-              <Time>{comment?.timestamp?.seconds}</Time>
+              <Time>
+                {/* <Moment fromNow>{comment?.timestamp?.toDate()}</Moment> */}
+                {
+                  moment(comment?.timestamp?.toDate()).fromNow()
+                }
+              </Time>
             </Profile>
             <div className="flex space-x-4">
               <ReplyButton
@@ -89,7 +85,6 @@ const Comment = ({ id, comment }) => {
                   onClick={(e) => {
                     e.stopPropagation();
                     deleteDoc(doc(db, "comments", id));
-                    router.push("/");
                   }}
                 >
                   <DeleteIcon src="/icon-delete.svg" />
@@ -103,7 +98,7 @@ const Comment = ({ id, comment }) => {
         <MobileContent>
           <MobileVote>
             <Add onClick={upVote}>+</Add>
-            <Value>{vote}</Value>
+            <Value>{votes.length}</Value>
             <Subtract onClick={downVote}>-</Subtract>
           </MobileVote>
           <div className="flex space-x-4">

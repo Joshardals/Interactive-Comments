@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import tw from "tailwind-styled-components";
 import { onSnapshot, collection, query, orderBy } from "@firebase/firestore";
 import { db } from "../firebase";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { dataItem, deleteItem } from "../atoms/dataAtom";
 import Comment from "./Comment";
 import AddComment from "./AddComment";
 

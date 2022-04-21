@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
-import Reply from "./Reply";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { replyItem, deleteItem, confirmDelete } from "../atoms/dataAtom";
-import Delete from "./Delete";
 import {
   onSnapshot,
   collection,
-  query,
-  orderBy,
-  where,
-  getDoc,
+  setDoc,
   deleteDoc,
   doc,
 } from "@firebase/firestore";
@@ -19,24 +12,33 @@ import { db } from "../firebase";
 
 const ReplyText = ({ id, replyId, replys, replyingTo }) => {
   const { data: session } = useSession();
-  const [vote, setVote] = useState(0);
-  const [reply, setReply] = useState(false);
-  const [replyContent, setReplyContent] = useRecoilState(replyItem);
-  const [deleted, setDeleted] = useRecoilState(deleteItem);
-  console.log("ReplyId", "==>", replyId);
-  console.log("CommentId", "==>", id);
-  const upVote = () => {
-    if (vote >= 0) {
-      setVote(vote + 1);
-    }
+  const [votes, setVotes] = useState([]);
+  const upVote = async () => {
+    await setDoc(
+      doc(db, "comments", id, "replies", replyId, "score", session?.user?.uid),
+      {
+        username: session?.user?.name,
+      }
+    );
   };
-  const downVote = () => {
-    if (vote > 0) {
-      setVote(vote - 1);
-    }
+  const downVote = async () => {
+    await deleteDoc(
+      doc(db, "comments", id, "replies", replyId, "score", session?.user?.uid)
+    );
   };
+
+  useEffect(() => {
+    onSnapshot(
+      collection(db, "comments", id, "replies", replyId, "score"),
+      (snapshot) => {
+        setVotes(snapshot.docs);
+      }
+    );
+  }, [db, id]);
+
   const handleDelete = (e) => {
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     deleteDoc(doc(db, "comments", id, "replies", replyId));
   };
   return (
@@ -44,7 +46,7 @@ const ReplyText = ({ id, replyId, replys, replyingTo }) => {
       <Wrapper>
         <Votes>
           <Add onClick={upVote}>+</Add>
-          <Value>{vote}</Value>
+          <Value>{votes.length}</Value>
           <Subtract onClick={downVote}>-</Subtract>
         </Votes>
         <Header>
@@ -58,16 +60,18 @@ const ReplyText = ({ id, replyId, replys, replyingTo }) => {
               <Time>{replys?.timestamp?.seconds}</Time>
             </Profile>
             <div className="flex space-x-4">
-              <DeleteButton
-                onClick={handleDelete}
-              >
-                <DeleteIcon src="/icon-delete.svg" />
-                <DeleteMsg>Delete</DeleteMsg>
-              </DeleteButton>
-              <EditButton>
-                <EditIcon src="icon-edit.svg" />
-                <EditMsg>Edit</EditMsg>
-              </EditButton>
+              {session?.user?.uid === replys?.id ? (
+                <DeleteButton onClick={handleDelete}>
+                  <DeleteIcon src="/icon-delete.svg" />
+                  <DeleteMsg>Delete</DeleteMsg>
+                </DeleteButton>
+              ) : null}
+              {/* {session?.user?.uid === replys?.id ? (
+                <EditButton>
+                  <EditIcon src="icon-edit.svg" />
+                  <EditMsg>Edit</EditMsg>
+                </EditButton>
+              ) : null} */}
             </div>
           </Top>
           <Body>
@@ -80,23 +84,26 @@ const ReplyText = ({ id, replyId, replys, replyingTo }) => {
         <MobileContent>
           <MobileVote>
             <Add onClick={upVote}>+</Add>
-            <Value>{vote}</Value>
+            <Value>{votes.length}</Value>
             <Subtract onClick={downVote}>-</Subtract>
           </MobileVote>
           <div className="flex space-x-4">
-            <MobileDeleteButton onClick={handleDelete}>
-              <DeleteIcon src="/icon-delete.svg"></DeleteIcon>
-              <DeleteMsg>Delete</DeleteMsg>
-            </MobileDeleteButton>
-            <MobileEditButton>
-              <EditIcon src="icon-edit.svg" />
-              <EditMsg>Edit</EditMsg>
-            </MobileEditButton>
+            {session?.user?.uid === replys?.id ? (
+              <MobileDeleteButton onClick={handleDelete}>
+                <DeleteIcon src="/icon-delete.svg"></DeleteIcon>
+                <DeleteMsg>Delete</DeleteMsg>
+              </MobileDeleteButton>
+            ) : null}
+            {/* {session?.user?.uid === replys?.id ? (
+              <MobileEditButton>
+                <EditIcon src="icon-edit.svg" />
+                <EditMsg>Edit</EditMsg>
+              </MobileEditButton>
+            ) : null} */}
           </div>
         </MobileContent>
       </Wrapper>
       <Line></Line>
-      {deleted ? <Delete id={id} /> : null}
     </Container>
   );
 };

@@ -1,6 +1,5 @@
 import { SessionProvider } from "next-auth/react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { RecoilRoot } from "recoil";
 import "../styles/globals.css";
 
 const GlobalStyle = createGlobalStyle`
@@ -24,9 +23,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <>
       <GlobalStyle />
       <SessionProvider session={session}>
-        <RecoilRoot>
-          <Component {...pageProps} />
-        </RecoilRoot>
+        <Component {...pageProps} />
       </SessionProvider>
     </>
   );
