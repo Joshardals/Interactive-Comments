@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment"; 
 import { useSession } from "next-auth/react";
 import tw from "tailwind-styled-components";
 import {
@@ -57,7 +58,7 @@ const ReplyText = ({ id, replyId, replys, replyingTo }) => {
               {session?.user?.name === replys?.username ? (
                 <You>{replys?.you}</You>
               ) : null}
-              <Time>{replys?.timestamp?.seconds}</Time>
+              <Time>{moment(replys?.timestamp?.toDate()).fromNow()}</Time>
             </Profile>
             <div className="flex space-x-4">
               {session?.user?.uid === replys?.id ? (

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Moment from "react-moment";
 import moment from "moment";
 import tw from "tailwind-styled-components";
 import Reply from "./Reply";
@@ -66,9 +65,7 @@ const Comment = ({ id, comment }) => {
               ) : null}
               <Time>
                 {/* <Moment fromNow>{comment?.timestamp?.toDate()}</Moment> */}
-                {
-                  moment(comment?.timestamp?.toDate()).fromNow()
-                }
+                {moment(comment?.timestamp?.toDate()).fromNow()}
               </Time>
             </Profile>
             <div className="flex space-x-4">
@@ -114,7 +111,6 @@ const Comment = ({ id, comment }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteDoc(doc(db, "comments", id));
-                  router.push("/");
                 }}
               >
                 <DeleteIcon src="/icon-delete.svg" />
