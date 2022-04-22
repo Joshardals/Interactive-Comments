@@ -51,11 +51,6 @@ const Wrapper = tw.div`
     flex items-center justify-center 
     min-h-screen
 `;
-// const LoginButton = tw.button`
-//     bg-[#5457b6] w-auto h-auto rounded-md
-//     p-3
-//     hover:opacity-50 transition-all ease-in text-white
-// `;
 const LoginButton = styled.button`
   background: #5457b6;
   color: white;
